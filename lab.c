@@ -131,12 +131,8 @@ int search_list(List *list, int id)
     return -1;
 }
 
-void insert_at_specified_id(List *list, int id, char track_name[50], char composer[50], char media_type[5], char album[50], int duration, int specified_id)
+void insert_at_specified_id(List *list, Track *new_track, int specified_id)
 {
-    Track *new_track = create_track(id, track_name, composer, media_type, album, duration);
-
-    printf("Insert at ID: %d\n", specified_id);
-
     for (Track *current_track = list->head; current_track; current_track = current_track->next)
     {
         printf("current_track->id = %d\n", current_track->id);
@@ -150,7 +146,7 @@ void insert_at_specified_id(List *list, int id, char track_name[50], char compos
         }
     }
     printf("ID %d not found in the list\n", specified_id);
-};
+}
 
 void delete_specified_id(List *list, int specified_id)
 {
@@ -250,19 +246,12 @@ int main()
     int obj_number, searched_id, specified_id = 0;
     List *list1 = create_list();
 
-    int track_id;
-    char track_name[50];
-    char composer[50];
-    char media_type[5];
-    char album[50];
-    int duration;
-
     printf("Object number: ");
     scanf("%d", &obj_number);
 
     input_multiple_tracks(list1, obj_number);
 
-    int n;
+    int menu_choice;
     do
     {
         printf("\nMenu:\n");
@@ -277,8 +266,8 @@ int main()
         printf("  9| Clear list\n");
         printf("  0| Exit\n");
         printf("\nYour selection:\n");
-        scanf(" %d", &n);
-        switch (n)
+        scanf(" %d", &menu_choice);
+        switch (menu_choice)
         {
         case 1:
             print_list(list1);
@@ -299,10 +288,9 @@ int main()
             push_back(list1, input_track());
             break;
         case 6:
-            input_track(&track_id, track_name, composer, media_type, album, &duration);
             printf("Insert ID to insert new track:");
             scanf("%d", &specified_id);
-            insert_at_specified_id(list1, track_id, track_name, composer, media_type, album, duration, specified_id);
+            insert_at_specified_id(list1, input_track(), specified_id);
             break;
         case 7:
             printf("Insert ID to be deleted:");
@@ -323,7 +311,7 @@ int main()
             printf("invalid option.");
             break;
         }
-    } while (n != 0);
+    } while (menu_choice != 0);
 
     return 0;
 }
